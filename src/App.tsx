@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
 
 import AuthService from './services/Auth';
 
@@ -42,12 +42,29 @@ export default class App extends React.Component<{}, State> {
       );
 
       const getSignInMethod = () => {
-        if (user.providerData != null) {
-          switch (user.providerData[0].providerId) {
-            case 'facebook.com':
-              return 'Facebook';
-          }
+        switch (user.providerData[0].providerId) {
+          case 'facebook.com':
+            return 'Facebook';
         }
+      };
+
+      const showLogoutAlert = () => {
+        Alert.alert(
+          'Are you sure?',
+          '',
+          [
+            {
+              text: 'Logout',
+              onPress: () => AuthService.logout(),
+              style: 'destructive',
+            },
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+          ],
+          { cancelable: false },
+        );
       };
 
       return (
@@ -55,7 +72,7 @@ export default class App extends React.Component<{}, State> {
           <Text>Welcome, {user.displayName}!</Text>
           {avatar}
           <Text>{`Logged in with ${getSignInMethod()}`}</Text>
-          <Button onPress={AuthService.logout} title='Logout' color='crimson' />
+          <Button onPress={showLogoutAlert} title='Logout' color='crimson' />
         </View>
       );
     }
