@@ -1,30 +1,35 @@
-# Boilerplate for React-Native with Expo and Typescript
+# Listify
 
-This Boilerplate will give you a proper development environment with testing, linting, env configuration, type checking and CI support!
+A React Native app built with Expo and Typescript.
 
-If you would like to know how i created this boilerplate or even want to create it yourself, please check out my blog post: https://medium.com/@ch1ll0ut1/how-to-setup-react-native-with-typescript-the-new-way-6c1f1cce6ed3
+This project also comes set up with testing, linting, env configuration, type checking and CI support, based on [ch1ll0ut1’s boilerplate](https://github.com/ch1ll0ut1/react-native-expo-typescript-boilerplate).
 
 ## How to use
 
 ### If you didnt install Expo yet, run:
 
-`yarn global add expo-cli`
+`npm i -g expo-cli` or `yarn global add expo-cli`
 
 ### To run the project
-`yarn start`
 
-This will open a new window with expo web interface and allow you to scan the qr code with your iphone camera or the expo android app which lets you open this react-native mobile app.
+`npm start` or `yarn start`
+
+This will open a new window with expo web interface and allow you to scan the QR code with your iPhone camera or the expo Android app, which lets you open this react-native mobile app.
 
 Now you can start editing files and the app will automatically refresh and show you your latest changes.
 
 ### Build
+
 For build read more at the official expo documentation: https://docs.expo.io/versions/latest/distribution/building-standalone-apps
 
 ### Testing
-`yarn test`
+
+`npm test`
 
 ### Linting
-`yarn lint`
+
+`npm lint`
 
 ### CI Validation
-`yarn validate`
+
+`npm validate`
