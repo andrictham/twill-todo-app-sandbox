@@ -6,13 +6,18 @@ This project also comes set up with testing, linting, env configuration, type ch
 
 ## How to use
 
+### Pre-requesites
+
+- Node.js v10.x
+- This project uses `npm` instead of `yarn`
+
 ### If you didnt install Expo yet, run:
 
-`npm i -g expo-cli` or `yarn global add expo-cli`
+`npm i -g expo-cli`
 
 ### To run the project
 
-`npm start` or `yarn start`
+`npm start`
 
 This will open a new window with expo web interface and allow you to scan the QR code with your iPhone camera or the expo Android app, which lets you open this react-native mobile app.
 
