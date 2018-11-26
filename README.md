@@ -10,10 +10,8 @@ This project also comes set up with testing, linting, env configuration, type ch
 
 - Node.js v10.x
 - This project uses `npm` instead of `yarn`
-
-### If you didnt install Expo yet, run:
-
-`npm i -g expo-cli`
+- Expo CLI. If you didnt install it yet, run: `npm i -g expo-cli`
+- Install dependencies: `npm i`
 
 ### To run the project
 
