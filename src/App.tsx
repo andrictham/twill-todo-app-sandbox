@@ -6,7 +6,7 @@ const {
 } = require('react-navigation');
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AuthService from './services/Auth';
-import SwipeableScreen from './views/screens/SwipeableScreen';
+import ListsScreen from './views/screens/ListsScreen';
 
 interface State {
   user: firebase.User | null;
@@ -130,7 +130,7 @@ interface ITabBarIcon {
 const TabNavigator = createBottomTabNavigator(
   {
     // Home: HomeScreen,
-    List: SwipeableScreen,
+    Lists: ListsScreen,
     Settings: SettingsScreen,
   },
   {
@@ -140,6 +140,8 @@ const TabNavigator = createBottomTabNavigator(
         let iconName;
         if (routeName === 'Home') {
           iconName = `home${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Lists') {
+          iconName = 'format-list-checks';
         } else if (routeName === 'Settings') {
           iconName = `settings${focused ? '' : '-outline'}`;
         }
