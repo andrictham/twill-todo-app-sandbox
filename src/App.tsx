@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
 const {
   createBottomTabNavigator,
@@ -6,12 +6,13 @@ const {
 } = require('react-navigation');
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AuthService from './services/Auth';
+import SwipeableScreen from './views/screens/SwipeableScreen';
 
 interface State {
   user: firebase.User | null;
 }
 
-class HomeScreen extends React.Component {
+class HomeScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -21,7 +22,7 @@ class HomeScreen extends React.Component {
   }
 }
 
-class SettingsScreen extends React.Component<{}, State> {
+class SettingsScreen extends Component<{}, State> {
   public state: State = { user: null };
 
   public componentDidMount() {
@@ -128,7 +129,8 @@ interface ITabBarIcon {
 
 const TabNavigator = createBottomTabNavigator(
   {
-    Home: HomeScreen,
+    // Home: HomeScreen,
+    List: SwipeableScreen,
     Settings: SettingsScreen,
   },
   {
