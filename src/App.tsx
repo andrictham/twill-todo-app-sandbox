@@ -1,16 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
 const {
-  createStackNavigator,
+  createBottomTabNavigator,
   createAppContainer,
 } = require('react-navigation');
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AuthService from './services/Auth';
 
 interface State {
   user: firebase.User | null;
 }
 
-class HomeScreen extends React.Component<{}, State> {
+class HomeScreen extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Home!</Text>
+      </View>
+    );
+  }
+}
+
+class SettingsScreen extends React.Component<{}, State> {
   public state: State = { user: null };
 
   public componentDidMount() {
@@ -82,7 +93,7 @@ class HomeScreen extends React.Component<{}, State> {
 
     return (
       <View style={styles.container}>
-        <Text>Welcome!</Text>
+        <Text>Login to save your lists and share it with friends</Text>
         <Button
           onPress={AuthService.loginWithFacebook}
           title='Login with Facebook'
@@ -101,10 +112,44 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppNavigator = createStackNavigator({
-  Home: {
-    screen: HomeScreen,
-  },
-});
+interface ITabBarIcon {
+  focused: boolean;
+  horizontal: boolean;
+  tintColor: string | undefined;
+}
 
-export default createAppContainer(AppNavigator);
+const TabNavigator = createBottomTabNavigator(
+  {
+    Home: HomeScreen,
+    Settings: SettingsScreen,
+  },
+  {
+    defaultNavigationOptions: ({ navigation }: any) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }: ITabBarIcon) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        if (routeName === 'Home') {
+          iconName = `home${focused ? '' : '-outline'}`;
+        } else if (routeName === 'Settings') {
+          iconName = `settings${focused ? '' : '-outline'}`;
+        }
+
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return (
+          <MaterialCommunityIcons
+            name={iconName ? iconName : 'border-none-variant'}
+            size={horizontal ? 20 : 25}
+            color={tintColor}
+          />
+        );
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+    },
+  },
+);
+
+export default createAppContainer(TabNavigator);
