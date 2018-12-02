@@ -55,10 +55,18 @@ class SettingsScreen extends React.Component<{}, State> {
         />
       );
 
-      const getSignInMethod = () => {
-        switch (user.providerData[0].providerId) {
-          case 'facebook.com':
-            return 'Facebook';
+      // Find out what user signed in with
+      const userSignedInWith = () => {
+        const userProviderData = user ? user.providerData[0] : null;
+        if (userProviderData !== null) {
+          switch (userProviderData.providerId) {
+            case 'facebook.com': {
+              return 'Facebook';
+            }
+            default: {
+              break;
+            }
+          }
         }
       };
 
@@ -85,7 +93,7 @@ class SettingsScreen extends React.Component<{}, State> {
         <View style={styles.container}>
           <Text>Welcome, {user.displayName}!</Text>
           {avatar}
-          <Text>{`Logged in with ${getSignInMethod()}`}</Text>
+          <Text>{`Logged in with ${userSignedInWith()}`}</Text>
           <Button onPress={showLogoutAlert} title='Logout' color='crimson' />
         </View>
       );
