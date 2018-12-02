@@ -1,13 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
-
+const {
+  createStackNavigator,
+  createAppContainer,
+} = require('react-navigation');
 import AuthService from './services/Auth';
 
 interface State {
   user: firebase.User | null;
 }
 
-export default class App extends React.Component<{}, State> {
+class HomeScreen extends React.Component<{}, State> {
   public state: State = { user: null };
 
   public componentDidMount() {
@@ -97,3 +100,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const AppNavigator = createStackNavigator({
+  Home: {
+    screen: HomeScreen,
+  },
+});
+
+export default createAppContainer(AppNavigator);
