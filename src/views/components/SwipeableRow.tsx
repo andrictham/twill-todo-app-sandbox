@@ -4,6 +4,7 @@ import { Animated, StyleSheet, Text, View, Alert } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { Haptic } from 'expo';
 
 export default class AppleStyleSwipeableRow extends Component {
   renderLeftActions = (progress, dragX) => {
@@ -64,12 +65,14 @@ export default class AppleStyleSwipeableRow extends Component {
       <Swipeable
         ref={this.updateRef}
         friction={2}
-        leftThreshold={30}
+        leftThreshold={90}
         rightThreshold={40}
         renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}
+        onSwipeableLeftWillOpen={() => {
+          Haptic.impact(Haptic.ImpactFeedbackStyle.Light);
+        }}
         onSwipeableLeftOpen={() => {
-          Alert.alert('Bought!');
           this.close();
         }}
       >
