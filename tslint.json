@@ -15,7 +15,8 @@
 		"jsx-no-lambda": false,
 		"no-else-after-return": false,
 		"max-line-length": false,
-		"ter-arrow-parens": false
+		"ter-arrow-parens": false,
+		"prefer-array-literal": false
 	},
 	"rulesDirectory": []
 }
