@@ -11,7 +11,7 @@ This project also comes set up with testing, linting, env configuration, type ch
 - Node.js v10.x
 - This project uses `npm` instead of `yarn`
 - Expo CLI. If you didnt install it yet, run: `npm i -g expo-cli`
-- Install dependencies: `npm i`
+- Install dependencies: `npm ic`
 - Run `cp .env.example .env` to create a .env file, and fill in the appropriate secrets from Firebase and Facebook
 
 ### To run the project
