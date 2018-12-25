@@ -139,7 +139,8 @@ export default class ListsScreen extends Component {
           ListHeaderComponent={
             <View style={styles.listHeader}>
               <Text style={styles.listHeaderText}>To Buy</Text>
-            </View>}
+            </View>
+          }
           stickyHeaderIndices={[0]}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           // tslint:disable-next-line:jsx-no-lambda

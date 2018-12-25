@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import storeConfig from './config/configureStore';
 import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
 const {
   createBottomTabNavigator,
@@ -7,6 +10,7 @@ const {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AuthService from './services/Auth';
 import ListsScreen from './views/screens/ListsScreen';
+import { create } from 'uuid-js';
 
 interface State {
   user: firebase.User | null;
@@ -95,7 +99,7 @@ class SettingsScreen extends Component<{}, State> {
           <Text>Welcome, {user.displayName}!</Text>
           {avatar}
           <Text>{`Logged in with ${userSignedInWith()}`}</Text>
-          <Button onPress={showLogoutAlert} title='Logout' color='crimson' />
+          <Button onPress={showLogoutAlert} title="Logout" color="crimson" />
         </View>
       );
     }
@@ -105,7 +109,7 @@ class SettingsScreen extends Component<{}, State> {
         <Text>Login to save your lists and share it with friends</Text>
         <Button
           onPress={AuthService.loginWithFacebook}
-          title='Login with Facebook'
+          title="Login with Facebook"
         />
       </View>
     );
@@ -164,4 +168,14 @@ const TabNavigator = createBottomTabNavigator(
   },
 );
 
-export default createAppContainer(TabNavigator);
+const AppContainer = createAppContainer(TabNavigator);
+
+const App = () => (
+  <Provider store={storeConfig().store}>
+    <PersistGate loading={null} persistor={storeConfig().persistor}>
+      <AppContainer />
+    </PersistGate>
+  </Provider>
+);
+
+export default App;

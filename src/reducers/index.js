@@ -1,58 +1,68 @@
-import { combineReducers } from 'redux'
-import * as types from '../actions/index'
-import { reducer as formReducer } from 'redux-form'
+import { combineReducers } from 'redux';
+import * as types from '../actions/index';
+// import { reducer as formReducer } from 'redux-form'
 // import initialLists from '../utils/data'
 
-const items = (state = [], action) => {
+const items = (state = {}, action) => {
   switch (action.type) {
     case types.ADD_ITEM:
       const {
         id,
         listID,
-        listState,
+        listStateID,
         index,
         name,
         quantity,
         collectiveNoun,
-      } = action
+      } = action;
       return {
         [id]: {
           listID,
-          listState,
+          listStateID,
           index,
           name,
           quantity,
           collectiveNoun,
         },
         ...state,
-      }
-  }
-
-const lists = (state = [], action) => {
-  switch (action.type) {
-    case types.ADD_LIST:
-      const { id, name } = action
-      return {
-        [id]: {
-          id,
-          name,
-          listStates: [],
-        },
-        ...state,
-      }
-    case types.ADD_LIST_STATE:
-      const { id, listID, index, name } = action
-      return {
-        ...state,
-        [listID]: {
-          ...state[listID],
-          listStates: state[listID].listStates.splice(index, 0, {id, listID, index, name}),
-        },
-      }
+      };
     default:
-      return state
+      return state;
   }
-}
+};
+
+// const lists = (state = [], action) => {
+//   switch (action.type) {
+//     case types.ADD_LIST:
+//       const { id, name } = action
+//       return {
+//         [id]: {
+//           id,
+//           name,
+//         },
+//         ...state,
+//       }
+//     default:
+//       return state
+//   }
+// }
+
+// const listStates = (state = [], action) => {
+//   switch (action.type) {
+//     case types.ADD_LIST_STATE:
+//       const { listStateID, listID, index, name } = action
+//       return {
+//         [listStateID]: {
+//           listId,
+//           index,
+//           name,
+//         },
+//         ...state,
+//       }
+//     default:
+//       return state
+//   }
+// }
 
 const notifications = (
   state = {
@@ -64,17 +74,18 @@ const notifications = (
     case types.NOTIFICATIONS_ARE_SET:
       return {
         areNotificationsSet: true,
-      }
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
 const rootReducer = combineReducers({
   items,
-  lists,
+  // lists,
+  // listStates,
   notifications,
-  form: formReducer,
-})
+  // form: formReducer,
+});
 
-export default rootReducer
+export default rootReducer;
