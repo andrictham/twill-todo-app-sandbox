@@ -81,10 +81,10 @@ const notifications = (
 };
 
 const rootReducer = combineReducers({
+  notifications,
   items,
   // lists,
   // listStates,
-  notifications,
   // form: formReducer,
 });
 
