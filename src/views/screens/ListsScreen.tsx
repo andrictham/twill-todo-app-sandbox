@@ -139,13 +139,17 @@ export default class ListsScreen extends Component {
           ListHeaderComponent={
             <View style={styles.listHeader}>
               <Text style={styles.listHeaderText}>To Buy</Text>
-            </View>
-          }
+            </View>}
           stickyHeaderIndices={[0]}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           // tslint:disable-next-line:jsx-no-lambda
-          renderItem={({ item, index }) => <Row item={item} index={index} />}
-          keyExtractor={(item, index) => `message ${index}`}
+          renderItem={({ item, index }: any) => {
+            // TODO: Fix type annotations to be more specific
+            return <Row item={item} index={index} />;
+          }}
+          keyExtractor={(item: any, index: any) => {
+            return `item ${index}`;
+          }}
           style={styles.flatList}
         />
       </View>

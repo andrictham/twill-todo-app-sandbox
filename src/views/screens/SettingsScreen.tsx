@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, Image, Alert } from 'react-native';
 import AuthService from '../../services/Auth';
 
 interface State {
@@ -79,7 +79,7 @@ class SettingsScreen extends Component<{}, State> {
           <Text>Welcome, {user.displayName}!</Text>
           {avatar}
           <Text>{`Logged in with ${userSignedInWith()}`}</Text>
-          <Button onPress={showLogoutAlert} title="Logout" color="crimson" />
+          <Button onPress={showLogoutAlert} title='Logout' color='crimson' />
         </View>
       );
     }
@@ -89,7 +89,7 @@ class SettingsScreen extends Component<{}, State> {
         <Text>Login to save your lists and share it with friends</Text>
         <Button
           onPress={AuthService.loginWithFacebook}
-          title="Login with Facebook"
+          title='Login with Facebook'
         />
       </View>
     );
