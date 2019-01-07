@@ -10,8 +10,23 @@ const {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // import HomeScreen from './views/screens/HomeScreen.tsx'
+import HomeScreen from './views/screens/HomeScreen';
 import ListsScreen from './views/screens/ListsScreen';
 import SettingsScreen from './views/screens/SettingsScreen';
+import ListDetailScreen from './views/screens/ListDetailScreen';
+import { View } from 'react-native';
+import { createStackNavigator } from 'react-navigation';
+
+const ListsStack = createStackNavigator(
+  {
+    Lists: ListsScreen,
+    ListDetail: ListDetailScreen,
+  },
+  {
+    headerMode: 'screen',
+    headerBackTitleVisible: false,
+  },
+);
 
 interface ITabBarIcon {
   focused: boolean;
@@ -21,8 +36,8 @@ interface ITabBarIcon {
 
 const TabNavigator = createBottomTabNavigator(
   {
-    // Home: HomeScreen,
-    Lists: ListsScreen,
+    Home: HomeScreen,
+    Lists: ListsStack,
     Settings: SettingsScreen,
   },
   {

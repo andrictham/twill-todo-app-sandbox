@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 
+import ListDetailScreen from './ListDetailScreen';
+
 import { RectButton } from 'react-native-gesture-handler';
 const { FlatList } = require('react-navigation');
 
 import SwipeableRow from '../components/SwipeableRow';
 
-const RowContents = ({ item }: any) => (
-  <RectButton style={styles.rowItem} onPress={() => Alert.alert(item.title)}>
+const RowContents = ({ item, onPress }) => (
+  <RectButton style={styles.rowItem} onPress={() => onPress()}>
     <Text style={styles.titleText}>{item.title}</Text>
     <Text numberOfLines={1} style={styles.descriptionText}>
       {item.description || 'No description'}
     </Text>
-    <Text style={styles.quantityText}>
-      {item.quantity} {'❭'}
-    </Text>
+    <Text style={styles.quantityText}>{item.caption || ''}</Text>
   </RectButton>
 );
 
-const Row = ({ item }: any) => {
+const Row = ({ item, onPress }) => {
   return (
     <SwipeableRow>
-      <RowContents item={item} />
+      <RowContents item={item} onPress={onPress} />
     </SwipeableRow>
   );
 };
@@ -31,102 +31,82 @@ export default class ListsScreen extends Component {
     items: [
       {
         title: '🥜 Almond Milk',
-        quantity: '1 carton',
         description: 'Nutty Bruce. Unsweetened preferred',
       },
       {
         title: '🥥 Nutty Bruce Coconut Milk',
-        quantity: '1 carton',
         description: 'Nutty Bruce',
       },
       {
         title: '🥣 Paleo Mix',
-        quantity: '2 packs',
         description: 'CeresOrganics',
       },
       {
         title: '🥛 Soy Milk',
-        quantity: '1 carton',
         description: 'Pacific',
       },
       {
         title: '🍃 Baby spinach',
-        quantity: '1 pack',
         description: '',
       },
       {
         title: '🥑 Avocados',
-        quantity: '6',
         description: 'Hass preferred!',
       },
       {
         title: '🍌 Bananas',
-        quantity: '6',
         description: '',
       },
       {
         title: '⚪️ Scallops',
-        quantity: '1 box',
         description: 'Frozen Hokkaido scallops',
       },
       {
         title: '🍒 Cherries',
-        quantity: '1 box',
         description: '',
       },
       {
         title: '🥭 Mangos',
-        quantity: '2',
         description: '',
       },
       {
         title: '🍤 Prawns',
-        quantity: '8',
         description: 'Make sure they are fresh!',
       },
       {
         title: '🥬 Green leafy vegetables',
-        quantity: '1 pack',
         description: 'Siew Pak Choi?',
       },
       {
         title: '🌱 Leeks',
-        quantity: '1',
         description: '',
       },
       {
         title: '⬜️ Tofu',
-        quantity: '1 box',
-        description: 'Silken?',
+        description: 'Silken organic',
       },
       {
         title: '🍅 Tomatoes',
-        quantity: '4',
         description: '',
       },
       {
         title: '🥔 Potatoes',
-        quantity: '1 bag',
         description: '',
       },
       {
         title: '🥕 Carrots',
-        quantity: '1 bag',
         description: '',
       },
       {
         title: '🎃 Butternut squash / pumpkin',
-        quantity: '1',
         description: '',
       },
       {
         title: '🍆 Eggplant',
-        quantity: '1',
         description: '',
       },
       {
         title: '🍠 Sweet potatoes',
-        quantity: '1',
         description: '',
       },
     ],
@@ -144,7 +124,18 @@ export default class ListsScreen extends Component {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           // tslint:disable-next-line:jsx-no-lambda
           renderItem={({ item, index }) => {
-            return <Row item={item} index={index} />;
+            return (
+              <Row
+                item={item}
+                index={index}
+                onPress={() => {
+                  this.props.navigation.navigate('ListDetail', {
+                    title: item.title,
+                    description: item.description,
+                  });
+                }}
+              />
+            );
           }}
           keyExtractor={(item, index) => {
             return `item ${index}`;
@@ -158,7 +149,7 @@ export default class ListsScreen extends Component {
 
 const styles = StyleSheet.create({
   view: {
-    marginTop: 35,
+    marginTop: 0,
   },
   listHeader: {
     width: '100%',
