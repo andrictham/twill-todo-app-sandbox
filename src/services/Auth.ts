@@ -10,17 +10,41 @@ export default class AuthService {
    * Uses Expo Facebook API and authenticates the Facebook user in Firebase
    */
   public static async loginWithFacebook() {
+    const appID = config.facebook.appId;
+    const permissions = ['public_profile', 'email'];
+
     const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-      config.facebook.appId,
-      { permissions: ['public_profile', 'email'] },
+      appID,
+      { permissions },
     );
 
-    if (type === 'success' && token) {
-      // Build Firebase credential with the Facebook access token.
-      const credential = Firebase.auth.FacebookAuthProvider.credential(token);
+    switch (type) {
+      case 'success': {
+        if (token) {
+          // Set persistent auth state
+          await Firebase.auth().setPersistence(
+            Firebase.auth.Auth.Persistence.LOCAL,
+          );
 
-      // Sign in with credential from the Facebook user.
-      await Firebase.auth().signInAndRetrieveDataWithCredential(credential);
+          // Build Firebase credential with the Facebook access token.
+          const credential = Firebase.auth.FacebookAuthProvider.credential(
+            token,
+          );
+
+          // Sign in with Facebook user credentials
+          const facebookProfileData = await Firebase.auth().signInAndRetrieveDataWithCredential(
+            credential,
+          );
+
+          // Do something with Facebook profile data
+          // OR you have subscribed to auth state change, authStateChange handler will process the profile data
+
+          return Promise.resolve({ type: 'success' });
+        }
+      }
+      case 'cancel': {
+        return Promise.resolve({ type: 'cancel' });
+      }
     }
   }
 
