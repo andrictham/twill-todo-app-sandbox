@@ -3,6 +3,41 @@ import * as types from '../actions/index';
 // import { reducer as formReducer } from 'redux-form'
 // import initialLists from '../utils/data'
 
+const lists = (state = [], action) => {
+  switch (action.type) {
+    case types.ADD_LIST:
+      const { id, name, displayRank, icon } = action;
+      return {
+        [id]: {
+          id,
+          name,
+          icon,
+          displayRank,
+        },
+        ...state,
+      };
+    default:
+      return state;
+  }
+};
+
+const listStates = (state = {}, action) => {
+  switch (action.type) {
+    case types.ADD_LIST_STATE:
+      const { id, listID, name, displayRank } = action;
+      return {
+        [id]: {
+          listID,
+          name,
+          displayRank,
+        },
+        ...state,
+      };
+    default:
+      return state;
+  }
+};
+
 const items = (state = {}, action) => {
   switch (action.type) {
     case types.ADD_ITEM:
@@ -31,39 +66,6 @@ const items = (state = {}, action) => {
   }
 };
 
-// const lists = (state = [], action) => {
-//   switch (action.type) {
-//     case types.ADD_LIST:
-//       const { id, name } = action
-//       return {
-//         [id]: {
-//           id,
-//           name,
-//         },
-//         ...state,
-//       }
-//     default:
-//       return state
-//   }
-// }
-
-// const listStates = (state = [], action) => {
-//   switch (action.type) {
-//     case types.ADD_LIST_STATE:
-//       const { listStateID, listID, index, name } = action
-//       return {
-//         [listStateID]: {
-//           listId,
-//           index,
-//           name,
-//         },
-//         ...state,
-//       }
-//     default:
-//       return state
-//   }
-// }
-
 const notifications = (
   state = {
     areNotificationsSet: false,
@@ -83,8 +85,8 @@ const notifications = (
 const rootReducer = combineReducers({
   notifications,
   items,
-  // lists,
-  // listStates,
+  lists,
+  listStates,
   // form: formReducer,
 });
 
