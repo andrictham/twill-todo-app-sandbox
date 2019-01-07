@@ -12,7 +12,7 @@ export default class AuthService {
   public static async loginWithFacebook() {
     const { type, token } = await Facebook.logInWithReadPermissionsAsync(
       config.facebook.appId,
-      { permissions: ['public_profile'] },
+      { permissions: ['public_profile', 'email'] },
     );
 
     if (type === 'success' && token) {
