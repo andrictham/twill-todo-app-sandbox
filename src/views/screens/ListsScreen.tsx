@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux';
 
 import ListDetailScreen from './ListDetailScreen';
 
@@ -10,7 +11,7 @@ import SwipeableRow from '../components/SwipeableRow';
 
 const RowContents = ({ item, onPress }) => (
   <RectButton style={styles.rowItem} onPress={() => onPress()}>
-    <Text style={styles.titleText}>{item.title}</Text>
+    <Text style={styles.nameText}>{item.name}</Text>
     <Text numberOfLines={1} style={styles.descriptionText}>
       {item.description || 'No description'}
     </Text>
@@ -26,126 +27,48 @@ const Row = ({ item, onPress }) => {
   );
 };
 
-export default class ListsScreen extends Component {
-  state = {
-    items: [
-      {
-        title: '🥜 Almond Milk',
-        description: 'Nutty Bruce. Unsweetened preferred',
-      },
-      {
-        title: '🥥 Nutty Bruce Coconut Milk',
-        description: 'Nutty Bruce',
-      },
-      {
-        title: '🥣 Paleo Mix',
-        description: 'CeresOrganics',
-      },
-      {
-        title: '🥛 Soy Milk',
-        description: 'Pacific',
-      },
-      {
-        title: '🍃 Baby spinach',
-        description: '',
-      },
-      {
-        title: '🥑 Avocados',
-        description: 'Hass preferred!',
-      },
-      {
-        title: '🍌 Bananas',
-        description: '',
-      },
-      {
-        title: '⚪️ Scallops',
-        description: 'Frozen Hokkaido scallops',
-      },
-      {
-        title: '🍒 Cherries',
-        description: '',
-      },
-      {
-        title: '🥭 Mangos',
-        description: '',
-      },
-      {
-        title: '🍤 Prawns',
-        description: 'Make sure they are fresh!',
-      },
-      {
-        title: '🥬 Green leafy vegetables',
-        description: 'Siew Pak Choi?',
-      },
-      {
-        title: '🌱 Leeks',
-        description: '',
-      },
-      {
-        title: '⬜️ Tofu',
-        description: 'Silken organic',
-      },
-      {
-        title: '🍅 Tomatoes',
-        description: '',
-      },
-      {
-        title: '🥔 Potatoes',
-        description: '',
-      },
-      {
-        title: '🥕 Carrots',
-        description: '',
-      },
-      {
-        title: '🎃 Butternut squash / pumpkin',
-        description: '',
-      },
-      {
-        title: '🍆 Eggplant',
-        description: '',
-      },
-      {
-        title: '🍠 Sweet potatoes',
-        description: '',
-      },
-    ],
-  };
-  render() {
-    return (
-      <View style={styles.view}>
-        <FlatList
-          data={this.state.items}
-          ListHeaderComponent={
-            <View style={styles.listHeader}>
-              <Text style={styles.listHeaderText}>To Buy</Text>
-            </View>}
-          stickyHeaderIndices={[0]}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          // tslint:disable-next-line:jsx-no-lambda
-          renderItem={({ item, index }) => {
-            return (
-              <Row
-                item={item}
-                index={index}
-                onPress={() => {
-                  this.props.navigation.navigate('ListDetail', {
-                    title: item.title,
-                    description: item.description,
-                  });
-                }}
-              />
-            );
-          }}
-          keyExtractor={(item, index) => {
-            return `item ${index}`;
-          }}
-          style={styles.flatList}
-        />
-      </View>
-    );
-  }
+interface ListsScreenProps {
+  items: object;
 }
+
+const ListsScreen = (props: ListsScreenProps) => {
+  const { items } = props;
+  console.tron.log(items[0].name);
+
+  return (
+    <View style={styles.view}>
+      <FlatList
+        data={items}
+        ListHeaderComponent={
+          <View style={styles.listHeader}>
+            <Text style={styles.listHeaderText}>To Buy</Text>
+          </View>
+        }
+        stickyHeaderIndices={[0]}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        // tslint:disable-next-line:jsx-no-lambda
+        renderItem={({ item, index }) => {
+          return (
+            <Row
+              item={item}
+              index={index}
+              onPress={() => {
+                props.navigation.navigate('ListDetail', {
+                  name: item.name,
+                  description: item.description,
+                });
+              }}
+            />
+          );
+        }}
+        keyExtractor={(item, index) => {
+          return `item ${index}`;
+        }}
+        style={styles.flatList}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   view: {
@@ -176,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(200, 199, 204)',
     height: StyleSheet.hairlineWidth,
   },
-  titleText: {
+  nameText: {
     fontWeight: 'bold',
     fontSize: 16,
     backgroundColor: 'transparent',
@@ -193,3 +116,15 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+
+const mapStateToProps = (state: State) => {
+  const items = [];
+  for (var key in state.items) {
+    items.push(state.items[key]);
+  }
+  return {
+    items,
+  };
+};
+
+export default connect(mapStateToProps)(ListsScreen);

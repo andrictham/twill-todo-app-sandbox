@@ -9,4 +9,6 @@ const reactotron = Reactotron.configure({
   .useReactNative() // add all built-in react native plugins
   .connect(); // let's connect!
 
+console.tron = Reactotron;
+
 export default reactotron;

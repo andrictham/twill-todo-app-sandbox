@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import * as types from '../actions/index';
 // import { reducer as formReducer } from 'redux-form'
-// import initialLists from '../utils/data'
+import mockItems from '../utils/data/mockItems.ts';
 
 const lists = (state = [], action) => {
   switch (action.type) {
@@ -38,15 +38,16 @@ const listStates = (state = {}, action) => {
   }
 };
 
-const items = (state = {}, action) => {
+const items = (state = mockItems, action) => {
   switch (action.type) {
     case types.ADD_ITEM:
       const {
         id,
         listID,
         listStateID,
-        index,
+        displayRank,
         name,
+        description,
         quantity,
         collectiveNoun,
       } = action;
@@ -54,8 +55,9 @@ const items = (state = {}, action) => {
         [id]: {
           listID,
           listStateID,
-          index,
+          displayRank,
           name,
+          description,
           quantity,
           collectiveNoun,
         },
