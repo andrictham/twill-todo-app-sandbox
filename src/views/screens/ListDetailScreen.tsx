@@ -3,11 +3,11 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 
 export default class ListDetailScreen extends Component {
   static navigationOptions = ({ navigation }) => {
-    const title = navigation.getParam('title', 'No title');
+    const name = navigation.getParam('name', 'No name');
     return {
-      title,
+      title: name,
     };
-  }
+  };
   render() {
     const { navigation } = this.props;
     const description = navigation.getParam('description', 'No description');
