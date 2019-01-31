@@ -73,10 +73,12 @@ const TabNavigator = createBottomTabNavigator(
 
 const AppContainer = createAppContainer(TabNavigator);
 
+const store = storeConfig().store;
+
 const App = () => {
   Reactotron.clear();
   return (
-    <Provider store={storeConfig().store}>
+    <Provider store={store}>
       <PersistGate loading={null} persistor={storeConfig().persistor}>
         <AppContainer />
       </PersistGate>
