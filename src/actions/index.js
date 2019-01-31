@@ -25,8 +25,6 @@ export const addItem = (
   listStateID,
   displayRank,
   name,
-  quantity,
-  collectiveNoun,
 ) => ({
   type: ADD_ITEM,
   id,
@@ -34,8 +32,6 @@ export const addItem = (
   listStateID,
   displayRank,
   name,
-  quantity,
-  collectiveNoun,
 });
 
 export const notificationsAreSet = () => ({

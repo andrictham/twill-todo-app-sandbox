@@ -7,7 +7,7 @@ import rootReducer from '../reducers';
 const persistConfig = {
   key: '@listify/root',
   storage: AsyncStorage,
-  whitelist: ['lists', 'notifications'],
+  whitelist: ['notifications'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

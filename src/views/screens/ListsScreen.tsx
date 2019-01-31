@@ -6,8 +6,9 @@ import ListDetailScreen from './ListDetailScreen';
 
 import { RectButton } from 'react-native-gesture-handler';
 const { FlatList } = require('react-navigation');
-
 import SwipeableRow from '../components/SwipeableRow';
+import mockLists from '../../utils/data/mockLists';
+import mockListStates from '../../utils/data/mockListStates';
 
 const RowContents = ({ item, onPress }) => (
   <RectButton style={styles.rowItem} onPress={() => onPress()}>
@@ -28,12 +29,14 @@ const Row = ({ item, onPress }) => {
 };
 
 interface ListsScreenProps {
+  lists: object;
+  listStates: object;
   items: object;
 }
 
 const ListsScreen = (props: ListsScreenProps) => {
-  const { items } = props;
-  console.tron.log(items[0].name);
+  const { lists, listStates, items } = props;
+  console.tron.log(items);
 
   return (
     <View style={styles.view}>
@@ -41,9 +44,8 @@ const ListsScreen = (props: ListsScreenProps) => {
         data={items}
         ListHeaderComponent={
           <View style={styles.listHeader}>
-            <Text style={styles.listHeaderText}>To Buy</Text>
-          </View>
-        }
+            <Text style={styles.listHeaderText}>{listStates[0].name}</Text>
+          </View>}
         stickyHeaderIndices={[0]}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         // tslint:disable-next-line:jsx-no-lambda
@@ -118,11 +120,26 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state: State) => {
-  const items = [];
-  for (var key in state.items) {
+  const lists = [];
+  const listStates = [];
+  let items = [];
+
+  for (const key in state.lists) {
+    lists.push(state.lists[key]);
+  }
+
+  for (const key in state.listStates) {
+    listStates.push(state.listStates[key]);
+  }
+
+  for (const key in state.items) {
     items.push(state.items[key]);
   }
+  items = items.filter(item => item.listID === '1' && item.listStateID === '1');
+
   return {
+    lists,
+    listStates,
     items,
   };
 };
