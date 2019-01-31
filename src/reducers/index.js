@@ -1,9 +1,11 @@
-import { combineReducers } from 'redux';
-import * as types from '../actions/index';
+import { combineReducers } from "redux";
+import * as types from "../actions/index";
 // import { reducer as formReducer } from 'redux-form'
-import mockItems from '../utils/data/mockItems.ts';
+import mockLists from "../utils/data/mockLists.ts";
+import mockListStates from "../utils/data/mockListStates.ts";
+import mockItems from "../utils/data/mockItems.ts";
 
-const lists = (state = [], action) => {
+const lists = (state = mockLists, action) => {
   switch (action.type) {
     case types.ADD_LIST:
       const { id, name, displayRank, icon } = action;
@@ -21,7 +23,7 @@ const lists = (state = [], action) => {
   }
 };
 
-const listStates = (state = {}, action) => {
+const listStates = (state = mockListStates, action) => {
   switch (action.type) {
     case types.ADD_LIST_STATE:
       const { id, listID, name, displayRank } = action;
@@ -48,8 +50,6 @@ const items = (state = mockItems, action) => {
         displayRank,
         name,
         description,
-        quantity,
-        collectiveNoun,
       } = action;
       return {
         [id]: {
@@ -58,8 +58,6 @@ const items = (state = mockItems, action) => {
           displayRank,
           name,
           description,
-          quantity,
-          collectiveNoun,
         },
         ...state,
       };
@@ -86,9 +84,9 @@ const notifications = (
 
 const rootReducer = combineReducers({
   notifications,
-  items,
   lists,
   listStates,
+  items,
   // form: formReducer,
 });
 
