@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { RectButton } from 'react-native-gesture-handler';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from 'react-native-underline-tabbar';
-const { FlatList } = require('react-navigation');
+import { FlatList, NavigationScreenProp } from 'react-navigation';
 
 import ListDetailScreen from './ListDetailScreen';
 import SwipeableRow from '../components/SwipeableRow';
@@ -33,37 +33,35 @@ interface PageProps {
   tabLabel: {
     label: string;
   };
-  navigation: any;
+  navigation: NavigationScreenProp<any, any>;
 }
 
 const Page = (props: PageProps) => {
   const { listState, items, navigation } = props;
   return (
-    <View style={styles.view}>
-      <FlatList
-        data={items}
-        stickyHeaderIndices={[0]}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        // tslint:disable-next-line:jsx-no-lambda
-        renderItem={({ item, index }) => {
-          return (
-            <Row
-              item={item}
-              index={index}
-              onPress={() => {
-                navigation.navigate('ListDetail', {
-                  name: item.name,
-                  description: item.description,
-                });
-              }}
-            />
-          );
-        }}
-        keyExtractor={(item, index) => {
-          return `item ${index}`;
-        }}
-      />
-    </View>
+    <FlatList
+      data={items}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      // tslint:disable-next-line:jsx-no-lambda
+      renderItem={({ item, index }) => {
+        return (
+          <Row
+            item={item}
+            index={index}
+            onPress={() => {
+              navigation.navigate('ListDetail', {
+                name: item.name,
+                description: item.description,
+              });
+            }}
+          />
+        );
+      }}
+      keyExtractor={(item, index) => {
+        return `item ${index}`;
+      }}
+      style={styles.flatList}
+    />
   );
 };
 
@@ -143,6 +141,7 @@ interface ListsScreenProps {
     listID: string;
     listStateID: string;
   }>;
+  navigation: NavigationScreenProp<any, any>;
 }
 
 class ListsScreen extends Component<ListsScreenProps> {
@@ -171,7 +170,7 @@ class ListsScreen extends Component<ListsScreenProps> {
   }));
 
   render() {
-    const { lists, listStates, items, navigation } = this.props;
+    const { listStates, items, navigation } = this.props;
 
     return (
       <View style={[styles.container]}>

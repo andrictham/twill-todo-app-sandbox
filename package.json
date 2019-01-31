@@ -29,7 +29,7 @@
     "@types/react": "^16.7.11",
     "@types/react-native": "^0.57.15",
     "@types/react-native-vector-icons": "^4.6.4",
-    "@types/react-navigation": "^2.13.7",
+    "@types/react-navigation": "^2.13.9",
     "@types/react-redux": "^6.0.11",
     "@types/react-test-renderer": "^16.0.3",
     "babel-preset-expo": "^5.0.0",
