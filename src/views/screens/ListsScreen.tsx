@@ -1,14 +1,71 @@
 import React, { Component } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { connect } from 'react-redux';
+import { RectButton } from 'react-native-gesture-handler';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
+import TabBar from 'react-native-underline-tabbar';
+const { FlatList } = require('react-navigation');
 
 import ListDetailScreen from './ListDetailScreen';
-
-import { RectButton } from 'react-native-gesture-handler';
-const { FlatList } = require('react-navigation');
 import SwipeableRow from '../components/SwipeableRow';
 import mockLists from '../../utils/data/mockLists';
 import mockListStates from '../../utils/data/mockListStates';
+
+interface PageProps {
+  items: Array<{
+    id: string;
+    name: string;
+    displayRank: number;
+  }>;
+  listState: {
+    id: string;
+    listID: string;
+    name: string;
+    displayRank: number;
+  };
+  tabLabel: {
+    label: string;
+  };
+  navigation: any;
+}
+
+const Page = (props: PageProps) => {
+  const { listState, items, navigation } = props;
+  return (
+    <View style={styles.view}>
+      <FlatList
+        data={items}
+        stickyHeaderIndices={[0]}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        // tslint:disable-next-line:jsx-no-lambda
+        renderItem={({ item, index }) => {
+          return (
+            <Row
+              item={item}
+              index={index}
+              onPress={() => {
+                navigation.navigate('ListDetail', {
+                  name: item.name,
+                  description: item.description,
+                });
+              }}
+            />
+          );
+        }}
+        keyExtractor={(item, index) => {
+          return `item ${index}`;
+        }}
+      />
+    </View>
+  );
+};
 
 const RowContents = ({ item, onPress }) => (
   <RectButton style={styles.rowItem} onPress={() => onPress()}>
@@ -28,65 +85,158 @@ const Row = ({ item, onPress }) => {
   );
 };
 
-interface ListsScreenProps {
-  lists: object;
-  listStates: object;
-  items: object;
-}
-
-const ListsScreen = (props: ListsScreenProps) => {
-  const { lists, listStates, items } = props;
-  console.tron.log(items);
-
+const Tab = ({
+  tab,
+  page,
+  isTabActive,
+  onPressHandler,
+  onTabLayout,
+  styles,
+}) => {
+  const { label } = tab;
+  const style = {
+    marginHorizontal: 8,
+    paddingVertical: 16,
+  };
+  const containerStyle = {
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    opacity: styles.opacity,
+    transform: [{ scale: styles.opacity }],
+  };
+  const textStyle = {
+    color: styles.backgroundColor,
+    fontWeight: '600',
+  };
   return (
-    <View style={styles.view}>
-      <FlatList
-        data={items}
-        ListHeaderComponent={
-          <View style={styles.listHeader}>
-            <Text style={styles.listHeaderText}>{listStates[0].name}</Text>
-          </View>}
-        stickyHeaderIndices={[0]}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        // tslint:disable-next-line:jsx-no-lambda
-        renderItem={({ item, index }) => {
-          return (
-            <Row
-              item={item}
-              index={index}
-              onPress={() => {
-                props.navigation.navigate('ListDetail', {
-                  name: item.name,
-                  description: item.description,
-                });
-              }}
-            />
-          );
-        }}
-        keyExtractor={(item, index) => {
-          return `item ${index}`;
-        }}
-        style={styles.flatList}
-      />
-    </View>
+    <TouchableOpacity
+      style={style}
+      onPress={onPressHandler}
+      onLayout={onTabLayout}
+      key={page}
+    >
+      <Animated.View style={containerStyle}>
+        <Animated.Text style={textStyle}>{label}</Animated.Text>
+      </Animated.View>
+    </TouchableOpacity>
   );
 };
 
+interface ListsScreenProps {
+  lists: Array<{
+    id: string;
+    name: string;
+    displayRank: number;
+  }>;
+  listStates: Array<{
+    id: string;
+    name: string;
+    displayRank: number;
+    listID: string;
+  }>;
+  items: Array<{
+    id: string;
+    name: string;
+    displayRank: number;
+    listID: string;
+    listStateID: string;
+  }>;
+}
+
+class ListsScreen extends Component<ListsScreenProps> {
+  _scrollX = new Animated.Value(0);
+  // 6 is a quantity of tabs
+  interpolators = Array.from({ length: 6 }, (_, i) => i).map(idx => ({
+    scale: this._scrollX.interpolate({
+      inputRange: [idx - 1, idx, idx + 1],
+      outputRange: [1, 1.2, 1],
+      extrapolate: 'clamp',
+    }),
+    opacity: this._scrollX.interpolate({
+      inputRange: [idx - 1, idx, idx + 1],
+      outputRange: [0.9, 1, 0.9],
+      extrapolate: 'clamp',
+    }),
+    textColor: this._scrollX.interpolate({
+      inputRange: [idx - 1, idx, idx + 1],
+      outputRange: ['#000', '#fff', '#000'],
+    }),
+    backgroundColor: this._scrollX.interpolate({
+      inputRange: [idx - 1, idx, idx + 1],
+      outputRange: ['rgba(0,0,0,0.1)', COLORS.active, 'rgba(0,0,0,0.1)'],
+      extrapolate: 'clamp',
+    }),
+  }));
+
+  render() {
+    const { lists, listStates, items, navigation } = this.props;
+
+    return (
+      <View style={[styles.container]}>
+        <ScrollableTabView
+          locked={true}
+          renderTabBar={() => (
+            <TabBar
+              underlineColor={COLORS.active}
+              tabBarStyle={{
+                backgroundColor: '#fff',
+                borderTopColor: '#d2d2d2',
+                borderTopWidth: 1,
+                marginTop: 0,
+              }}
+              renderTab={(
+                tab,
+                page,
+                isTabActive,
+                onPressHandler,
+                onTabLayout,
+              ) => (
+                <Tab
+                  key={page}
+                  tab={tab}
+                  page={page}
+                  isTabActive={isTabActive}
+                  onPressHandler={onPressHandler}
+                  onTabLayout={onTabLayout}
+                  styles={this.interpolators[page]}
+                />
+              )}
+            />
+          )}
+          onScroll={x => this._scrollX.setValue(x)}
+        >
+          {listStates.map(listState => {
+            return (
+              <Page
+                key={listState.id}
+                tabLabel={{ label: listState.name }}
+                listState={listState}
+                items={items.filter(item => item.listStateID === listState.id)}
+                navigation={navigation}
+              />
+            );
+          })}
+        </ScrollableTabView>
+      </View>
+    );
+  }
+}
+
+const COLORS = {
+  active: '#ef5350',
+};
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
   view: {
     marginTop: 0,
-  },
-  listHeader: {
-    width: '100%',
-    backgroundColor: '#ffffff',
-  },
-  listHeaderText: {
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    fontSize: 21,
-  },
-  flatList: {
-    marginTop: 25,
   },
   rowItem: {
     flex: 1,
@@ -122,7 +272,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state: State) => {
   const lists = [];
   const listStates = [];
-  let items = [];
+  const items = [];
 
   for (const key in state.lists) {
     lists.push(state.lists[key]);
@@ -135,7 +285,6 @@ const mapStateToProps = (state: State) => {
   for (const key in state.items) {
     items.push(state.items[key]);
   }
-  items = items.filter(item => item.listID === '1' && item.listStateID === '1');
 
   return {
     lists,
