@@ -13,11 +13,37 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from 'react-native-underline-tabbar';
 import { FlatList, NavigationScreenProp } from 'react-navigation';
 
-import ListDetailScreen from './ListDetailScreen';
 import SwipeableRow from '../components/SwipeableRow';
-import mockLists from '../../utils/data/mockLists';
-import mockListStates from '../../utils/data/mockListStates';
-import sortListStatesByDisplayRank from '../../utils/sorting';
+import { transitionItemListState } from '../../actions/index';
+import { sortListStatesByDisplayRank } from '../../utils/sorting';
+
+const Row = ({
+  item,
+  onPress,
+  listState,
+  listStates,
+  handleItemTransition,
+}) => {
+  return (
+    <SwipeableRow
+      listState={listState}
+      listStates={listStates}
+      item={item}
+      handleItemTransition={handleItemTransition}
+    >
+      <RowContents item={item} onPress={onPress} />
+    </SwipeableRow>
+  );
+};
+
+const RowContents = ({ item, onPress }) => (
+  <RectButton style={styles.rowItem} onPress={() => onPress()}>
+    <Text style={styles.nameText}>{item.name}</Text>
+    <Text numberOfLines={1} style={styles.descriptionText}>
+      {item.description || 'No description'}
+    </Text>
+  </RectButton>
+);
 
 interface PageProps {
   items: Array<{
@@ -41,11 +67,18 @@ interface PageProps {
     label: string;
   };
   navigation: NavigationScreenProp<any, any>;
+  handleItemTransition(id: string, listID: string): void;
 }
 
 const Page = (props: PageProps) => {
-  const { listState, listStates, items, navigation } = props;
-  const currentList;
+  const {
+    listState,
+    listStates,
+    items,
+    navigation,
+    handleItemTransition,
+  } = props;
+
   return (
     <FlatList
       data={items}
@@ -64,6 +97,7 @@ const Page = (props: PageProps) => {
             }}
             listState={listState}
             listStates={listStates}
+            handleItemTransition={handleItemTransition}
           />
         );
       }}
@@ -72,24 +106,6 @@ const Page = (props: PageProps) => {
       }}
       style={styles.flatList}
     />
-  );
-};
-
-const RowContents = ({ item, onPress }) => (
-  <RectButton style={styles.rowItem} onPress={() => onPress()}>
-    <Text style={styles.nameText}>{item.name}</Text>
-    <Text numberOfLines={1} style={styles.descriptionText}>
-      {item.description || 'No description'}
-    </Text>
-    <Text style={styles.quantityText}>{item.caption || ''}</Text>
-  </RectButton>
-);
-
-const Row = ({ item, onPress, listState, listStates }) => {
-  return (
-    <SwipeableRow listState={listState} listStates={listStates}>
-      <RowContents item={item} onPress={onPress} />
-    </SwipeableRow>
   );
 };
 
@@ -152,6 +168,13 @@ interface ListsScreenProps {
     listStateID: string;
   }>;
   navigation: NavigationScreenProp<any, any>;
+  transitionItemListState(
+    arg: object,
+  ): {
+    id: string;
+    listStateID: string;
+    type: string; // action type
+  };
 }
 
 class ListsScreen extends Component<ListsScreenProps> {
@@ -178,6 +201,10 @@ class ListsScreen extends Component<ListsScreenProps> {
       extrapolate: 'clamp',
     }),
   }));
+
+  handleItemTransition = (id: string, listStateID: string) => {
+    this.props.transitionItemListState({ id, listStateID });
+  }
 
   render() {
     const { allListStates, allItems, navigation } = this.props;
@@ -231,6 +258,7 @@ class ListsScreen extends Component<ListsScreenProps> {
                   item => item.listStateID === listState.id,
                 )}
                 navigation={navigation}
+                handleItemTransition={this.handleItemTransition}
               />
             );
           })}
@@ -309,4 +337,7 @@ const mapStateToProps = (state: State) => {
   };
 };
 
-export default connect(mapStateToProps)(ListsScreen);
+export default connect(
+  mapStateToProps,
+  { transitionItemListState },
+)(ListsScreen);
