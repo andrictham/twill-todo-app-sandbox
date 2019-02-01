@@ -17,6 +17,7 @@ import ListDetailScreen from './ListDetailScreen';
 import SwipeableRow from '../components/SwipeableRow';
 import mockLists from '../../utils/data/mockLists';
 import mockListStates from '../../utils/data/mockListStates';
+import sortListStatesByDisplayRank from '../../utils/sorting';
 
 interface PageProps {
   items: Array<{
@@ -30,6 +31,12 @@ interface PageProps {
     name: string;
     displayRank: number;
   };
+  listStates: Array<{
+    id: string;
+    listID: string;
+    name: string;
+    displayRank: number;
+  }>;
   tabLabel: {
     label: string;
   };
@@ -37,7 +44,8 @@ interface PageProps {
 }
 
 const Page = (props: PageProps) => {
-  const { listState, items, navigation } = props;
+  const { listState, listStates, items, navigation } = props;
+  const currentList;
   return (
     <FlatList
       data={items}
@@ -54,6 +62,8 @@ const Page = (props: PageProps) => {
                 description: item.description,
               });
             }}
+            listState={listState}
+            listStates={listStates}
           />
         );
       }}
@@ -75,9 +85,9 @@ const RowContents = ({ item, onPress }) => (
   </RectButton>
 );
 
-const Row = ({ item, onPress }) => {
+const Row = ({ item, onPress, listState, listStates }) => {
   return (
-    <SwipeableRow>
+    <SwipeableRow listState={listState} listStates={listStates}>
       <RowContents item={item} onPress={onPress} />
     </SwipeableRow>
   );
@@ -123,18 +133,18 @@ const Tab = ({
 };
 
 interface ListsScreenProps {
-  lists: Array<{
+  allLists: Array<{
     id: string;
     name: string;
     displayRank: number;
   }>;
-  listStates: Array<{
+  allListStates: Array<{
     id: string;
     name: string;
     displayRank: number;
     listID: string;
   }>;
-  items: Array<{
+  allItems: Array<{
     id: string;
     name: string;
     displayRank: number;
@@ -170,7 +180,11 @@ class ListsScreen extends Component<ListsScreenProps> {
   }));
 
   render() {
-    const { listStates, items, navigation } = this.props;
+    const { allListStates, allItems, navigation } = this.props;
+    const currentListID = '1';
+    const listStates = allListStates
+      .filter(listState => listState.listID === currentListID)
+      .sort(sortListStatesByDisplayRank);
 
     return (
       <View style={[styles.container]}>
@@ -212,7 +226,10 @@ class ListsScreen extends Component<ListsScreenProps> {
                 key={listState.id}
                 tabLabel={{ label: listState.name }}
                 listState={listState}
-                items={items.filter(item => item.listStateID === listState.id)}
+                listStates={listStates}
+                items={allItems.filter(
+                  item => item.listStateID === listState.id,
+                )}
                 navigation={navigation}
               />
             );
@@ -269,26 +286,26 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state: State) => {
-  const lists = [];
-  const listStates = [];
-  const items = [];
+  const allLists = [];
+  const allListStates = [];
+  const allItems = [];
 
   for (const key in state.lists) {
-    lists.push(state.lists[key]);
+    allLists.push(state.lists[key]);
   }
 
   for (const key in state.listStates) {
-    listStates.push(state.listStates[key]);
+    allListStates.push(state.listStates[key]);
   }
 
   for (const key in state.items) {
-    items.push(state.items[key]);
+    allItems.push(state.items[key]);
   }
 
   return {
-    lists,
-    listStates,
-    items,
+    allLists,
+    allListStates,
+    allItems,
   };
 };
 

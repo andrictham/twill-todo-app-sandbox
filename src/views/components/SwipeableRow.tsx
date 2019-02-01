@@ -12,6 +12,15 @@ export default class AppleStyleSwipeableRow extends Component {
       inputRange: [0, 50, 100, 101],
       outputRange: [-20, 0, 0, 1],
     });
+    const { listState, listStates } = this.props;
+
+    // listState displayRank counts from 1 not 0
+    // so a listState's index = listState.displayRank - 1
+    const nextListState =
+      listState.displayRank === listStates.length
+        ? listStates[0]
+        : listStates[listState.displayRank];
+
     return (
       <RectButton style={styles.leftAction} onPress={this.close}>
         <Animated.Text
@@ -22,7 +31,7 @@ export default class AppleStyleSwipeableRow extends Component {
             },
           ]}
         >
-          Bought
+          {nextListState.name}
         </Animated.Text>
       </RectButton>
     );
