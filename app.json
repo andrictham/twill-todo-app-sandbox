@@ -1,25 +1,25 @@
 {
-  "expo": {
-    "name": "listify",
-    "description": "An awesome list app",
-    "slug": "listify",
-    "privacy": "public",
-    "sdkVersion": "32.0.0",
-    "platforms": ["ios", "android"],
-    "version": "0.0.1",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": false
-    }
-  }
+	"expo": {
+		"name": "nifty",
+		"description": "An awesome list app",
+		"slug": "nifty",
+		"privacy": "public",
+		"sdkVersion": "32.0.0",
+		"platforms": ["ios", "android"],
+		"version": "0.0.1",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": false
+		}
+	}
 }

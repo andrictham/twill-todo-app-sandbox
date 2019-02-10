@@ -1,24 +1,24 @@
-import Reactotron from './ReactotronConfig';
-import { persistStore, persistReducer } from 'redux-persist';
-import { AsyncStorage } from 'react-native';
+import Reactotron from "./ReactotronConfig";
+import { persistStore, persistReducer } from "redux-persist";
+import { AsyncStorage } from "react-native";
 
-import rootReducer from '../reducers';
+import rootReducer from "../reducers";
 
 const persistConfig = {
-  key: '@listify/root',
-  storage: AsyncStorage,
-  whitelist: ['notifications'],
+	key: "@nifty/root",
+	storage: AsyncStorage,
+	whitelist: ["notifications"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export default () => {
-  let store = Reactotron.createStore(
-    persistedReducer,
-    // composeWithDevTools(applyMiddleware()),
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__(),
-  );
-  let persistor = persistStore(store);
-  return { store, persistor };
+	let store = Reactotron.createStore(
+		persistedReducer,
+		// composeWithDevTools(applyMiddleware()),
+		window.__REDUX_DEVTOOLS_EXTENSION__ &&
+			window.__REDUX_DEVTOOLS_EXTENSION__(),
+	);
+	let persistor = persistStore(store);
+	return { store, persistor };
 };

@@ -1,4 +1,4 @@
-# Listify
+# Nifty
 
 A React Native app built with Expo and Typescript.
 
@@ -23,8 +23,10 @@ This will open a new window with expo web interface and allow you to scan the QR
 Now you can start editing files and the app will automatically refresh and show you your latest changes.
 
 #### Reactotron
+
 - Install Reactotron https://github.com/infinitered/reactotron/blob/master/docs/installing.md
 - In this project, go to ReactotronConfig.js, add your local IP address (check System Preferences > Network) as host.
+
 ```
 const reactotron = Reactotron.configure({
   port: 9090,
@@ -34,6 +36,7 @@ const reactotron = Reactotron.configure({
   .useReactNative()
   .connect();
 ```
+
 - Launch Reactotron and you should see some events in the Timeline
 
 ### Build
