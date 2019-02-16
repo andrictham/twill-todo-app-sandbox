@@ -1,8 +1,8 @@
 {
 	"expo": {
-		"name": "nifty",
+		"name": "twill",
 		"description": "An awesome list app",
-		"slug": "nifty",
+		"slug": "twill",
 		"privacy": "public",
 		"sdkVersion": "32.0.0",
 		"platforms": ["ios", "android"],

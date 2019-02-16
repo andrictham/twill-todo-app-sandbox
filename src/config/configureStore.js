@@ -5,7 +5,7 @@ import { AsyncStorage } from "react-native";
 import rootReducer from "../reducers";
 
 const persistConfig = {
-	key: "@nifty/root",
+	key: "@twill/root",
 	storage: AsyncStorage,
 	whitelist: ["notifications"],
 };

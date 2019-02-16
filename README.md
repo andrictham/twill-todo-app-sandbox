@@ -1,4 +1,4 @@
-# Nifty
+# Twill
 
 A React Native app built with Expo and Typescript.
 
