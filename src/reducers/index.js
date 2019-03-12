@@ -23,6 +23,21 @@ const lists = (state = mockLists, action) => {
 
 const columns = (state = mockColumns, action) => {
   switch (action.type) {
+    case types.UPDATE_ITEM_COLUMN:
+      let { newColumnID } = action;
+      console.tron.log('newColumnID', newColumnID);
+      // console.tron.log('state', state);
+      // console.tron.log('state[newColumnID]', state[newColumnID]);
+      return {
+        ...state,
+        [newColumnID]: {
+          id: state[newColumnID].id,
+          listID: state[newColumnID].listID,
+          name: state[newColumnID].name,
+          icon: state[newColumnID].icon,
+          items: [...state[newColumnID].items, newColumnID],
+        },
+      };
     case types.ADD_COLUMN_ITEM: {
       let { id, itemID } = action;
       return {
@@ -49,14 +64,18 @@ const columns = (state = mockColumns, action) => {
 const items = (state = mockItems, action) => {
   switch (action.type) {
     case types.UPDATE_ITEM_COLUMN:
-      console.tron.log('item reducer called UPDATE_ITEM_COLUMN');
+      let { id, newColumnID } = action;
+      console.tron.log('items state', state);
+      console.tron.log('item id', id);
+      console.tron.log('state[id]', state[id]);
       return {
         ...state,
-        [action.id]: {
-          listID: state[action.id].listID,
-          columnID: action.newColumnID,
-          name: state[action.id].name,
-          description: state[action.id].description,
+        [id]: {
+          id,
+          listID: state[id].listID,
+          columnID: newColumnID,
+          name: state[id].name,
+          description: state[id].description,
         },
       };
     // case types.ADD_ITEM:

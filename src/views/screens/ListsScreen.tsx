@@ -190,8 +190,8 @@ class ListsScreen extends Component<ListsScreenProps> {
     }),
   }));
 
-  handleItemTransition = (id: string, columnID: string) => {
-    this.props.updateItemColumn({ id, columnID });
+  handleItemTransition = (id: string, newColumnID: string) => {
+    this.props.updateItemColumn({ id, newColumnID });
   };
 
   render() {

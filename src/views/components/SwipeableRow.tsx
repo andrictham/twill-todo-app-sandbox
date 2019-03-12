@@ -16,9 +16,9 @@ export default class AppleStyleSwipeableRow extends Component {
 
     const columnIndex = columns.indexOf(column);
     const newColumn =
-      columnIndex === 0 // first column
-        ? columns[columns.length - 1] // last column
-        : columns[columnIndex - 1]; // column to left
+      columnIndex !== columns.length - 1 // if current column is not last
+        ? columns[columnIndex + 1] // go to column to right
+        : columns[0]; // else go to first column
 
     return (
       <RectButton
@@ -41,32 +41,43 @@ export default class AppleStyleSwipeableRow extends Component {
       </RectButton>
     );
   };
-  renderRightAction = (text, color, x, progress) => {
-    const trans = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [x, 0],
+
+  renderRightActions = (progress, dragX) => {
+    const trans = dragX.interpolate({
+      inputRange: [0, 50, 100, 101],
+      outputRange: [-20, 0, 0, 1],
     });
-    const pressHandler = () => {
-      this.close();
-      alert(text);
-    };
+    const { column, columns, handleItemTransition, item } = this.props;
+
+    const columnIndex = columns.indexOf(column);
+
+    const newColumn =
+      columnIndex !== 0 // if current column is not first
+        ? columns[columnIndex - 1] // go to column to left
+        : columns[columns.length - 1]; // else go to last column
+
     return (
-      <Animated.View style={{ flex: 1, transform: [{ translateX: trans }] }}>
-        <RectButton
-          style={[styles.rightAction, { backgroundColor: color }]}
-          onPress={pressHandler}
+      <RectButton
+        style={styles.rightAction}
+        onPress={() => {
+          handleItemTransition(item.id, newColumn.id);
+          this.close();
+        }}
+      >
+        <Animated.Text
+          style={[
+            styles.actionText,
+            {
+              transform: [{ translateX: trans }],
+            },
+          ]}
         >
-          <Text style={styles.actionText}>{text}</Text>
-        </RectButton>
-      </Animated.View>
+          {newColumn.name}
+        </Animated.Text>
+      </RectButton>
     );
   };
-  renderRightActions = progress => (
-    <View style={{ width: 192, flexDirection: 'row' }}>
-      {this.renderRightAction('Move', '#ffab00', 128, progress)}
-      {this.renderRightAction('Archive', '#dd2c00', 64, progress)}
-    </View>
-  );
+
   updateRef = ref => {
     this._swipeableRow = ref;
   };
@@ -80,7 +91,7 @@ export default class AppleStyleSwipeableRow extends Component {
         ref={this.updateRef}
         friction={2}
         leftThreshold={90}
-        rightThreshold={40}
+        rightThreshold={90}
         renderLeftActions={this.renderLeftActions}
         renderRightActions={this.renderRightActions}
         onSwipeableLeftWillOpen={() => {
@@ -109,8 +120,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   rightAction: {
-    alignItems: 'center',
     flex: 1,
+    backgroundColor: '#497AFC',
     justifyContent: 'center',
   },
 });
