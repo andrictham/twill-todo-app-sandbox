@@ -14,20 +14,14 @@ import TabBar from 'react-native-underline-tabbar';
 import { FlatList, NavigationScreenProp } from 'react-navigation';
 
 import SwipeableRow from '../components/SwipeableRow';
-import { transitionItemListState } from '../../actions/index';
-import { sortListStatesByDisplayRank } from '../../utils/sorting';
+import { updateItemColumn } from '../../actions/index';
+import { sortcolumnsByDisplayRank } from '../../utils/sorting';
 
-const Row = ({
-  item,
-  onPress,
-  listState,
-  listStates,
-  handleItemTransition,
-}) => {
+const Row = ({ item, onPress, column, columns, handleItemTransition }) => {
   return (
     <SwipeableRow
-      listState={listState}
-      listStates={listStates}
+      column={column}
+      columns={columns}
       item={item}
       handleItemTransition={handleItemTransition}
     >
@@ -51,13 +45,13 @@ interface PageProps {
     name: string;
     displayRank: number;
   }>;
-  listState: {
+  column: {
     id: string;
     listID: string;
     name: string;
     displayRank: number;
   };
-  listStates: Array<{
+  columns: Array<{
     id: string;
     listID: string;
     name: string;
@@ -71,13 +65,7 @@ interface PageProps {
 }
 
 const Page = (props: PageProps) => {
-  const {
-    listState,
-    listStates,
-    items,
-    navigation,
-    handleItemTransition,
-  } = props;
+  const { column, columns, items, navigation, handleItemTransition } = props;
 
   return (
     <FlatList
@@ -95,8 +83,8 @@ const Page = (props: PageProps) => {
                 description: item.description,
               });
             }}
-            listState={listState}
-            listStates={listStates}
+            column={column}
+            columns={columns}
             handleItemTransition={handleItemTransition}
           />
         );
@@ -154,7 +142,7 @@ interface ListsScreenProps {
     name: string;
     displayRank: number;
   }>;
-  allListStates: Array<{
+  allColumns: Array<{
     id: string;
     name: string;
     displayRank: number;
@@ -165,14 +153,14 @@ interface ListsScreenProps {
     name: string;
     displayRank: number;
     listID: string;
-    listStateID: string;
+    columnID: string;
   }>;
   navigation: NavigationScreenProp<any, any>;
-  transitionItemListState(
+  updateItemColumn(
     arg: object,
   ): {
     id: string;
-    listStateID: string;
+    columnID: string;
     type: string; // action type
   };
 }
@@ -202,16 +190,19 @@ class ListsScreen extends Component<ListsScreenProps> {
     }),
   }));
 
-  handleItemTransition = (id: string, listStateID: string) => {
-    this.props.transitionItemListState({ id, listStateID });
-  }
+  handleItemTransition = (id: string, columnID: string) => {
+    this.props.updateItemColumn({ id, columnID });
+  };
 
   render() {
-    const { allListStates, allItems, navigation } = this.props;
-    const currentListID = '1';
-    const listStates = allListStates
-      .filter(listState => listState.listID === currentListID)
-      .sort(sortListStatesByDisplayRank);
+    const { allLists, allColumns, allItems, navigation } = this.props;
+    const currentListID = '1list';
+
+    console.tron.log(allLists[currentListID]);
+
+    const columns = allLists[currentListID].listColumns.map(
+      columnID => allColumns[columnID],
+    );
 
     return (
       <View style={[styles.container]}>
@@ -247,16 +238,14 @@ class ListsScreen extends Component<ListsScreenProps> {
           )}
           onScroll={x => this._scrollX.setValue(x)}
         >
-          {listStates.map(listState => {
+          {columns.map(column => {
             return (
               <Page
-                key={listState.id}
-                tabLabel={{ label: listState.name }}
-                listState={listState}
-                listStates={listStates}
-                items={allItems.filter(
-                  item => item.listStateID === listState.id,
-                )}
+                key={column.id}
+                tabLabel={{ label: column.name }}
+                column={column}
+                columns={columns}
+                items={allItems.filter(item => item.columnID === column.id)}
                 navigation={navigation}
                 handleItemTransition={this.handleItemTransition}
               />
@@ -315,29 +304,29 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: State) => {
   const allLists = [];
-  const allListStates = [];
+  const allColumns = [];
   const allItems = [];
 
-  for (const key in state.lists) {
-    allLists.push(state.lists[key]);
-  }
+  // for (const key in state.lists) {
+  //   allLists.push(state.lists[key]);
+  // }
 
-  for (const key in state.listStates) {
-    allListStates.push(state.listStates[key]);
-  }
+  // for (const key in state.columns) {
+  //   allColumns.push(state.columns[key]);
+  // }
 
   for (const key in state.items) {
     allItems.push(state.items[key]);
   }
 
   return {
-    allLists,
-    allListStates,
+    allLists: state.lists,
+    allColumns: state.columns,
     allItems,
   };
 };
 
 export default connect(
   mapStateToProps,
-  { transitionItemListState },
+  { updateItemColumn },
 )(ListsScreen);

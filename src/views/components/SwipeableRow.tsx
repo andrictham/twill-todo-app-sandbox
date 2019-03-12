@@ -12,20 +12,19 @@ export default class AppleStyleSwipeableRow extends Component {
       inputRange: [0, 50, 100, 101],
       outputRange: [-20, 0, 0, 1],
     });
-    const { listState, listStates, handleItemTransition, item } = this.props;
+    const { column, columns, handleItemTransition, item } = this.props;
 
-    // listState displayRank counts from 1 not 0
-    // so a listState's index = listState.displayRank - 1
-    const nextListState =
-      listState.displayRank === listStates.length
-        ? listStates[0]
-        : listStates[listState.displayRank];
+    const columnIndex = columns.indexOf(column);
+    const newColumn =
+      columnIndex === 0 // first column
+        ? columns[columns.length - 1] // last column
+        : columns[columnIndex - 1]; // column to left
 
     return (
       <RectButton
         style={styles.leftAction}
         onPress={() => {
-          handleItemTransition(item.id, nextListState.id);
+          handleItemTransition(item.id, newColumn.id);
           this.close();
         }}
       >
@@ -37,11 +36,11 @@ export default class AppleStyleSwipeableRow extends Component {
             },
           ]}
         >
-          {nextListState.name}
+          {newColumn.name}
         </Animated.Text>
       </RectButton>
     );
-  }
+  };
   renderRightAction = (text, color, x, progress) => {
     const trans = progress.interpolate({
       inputRange: [0, 1],
@@ -61,19 +60,19 @@ export default class AppleStyleSwipeableRow extends Component {
         </RectButton>
       </Animated.View>
     );
-  }
+  };
   renderRightActions = progress => (
     <View style={{ width: 192, flexDirection: 'row' }}>
       {this.renderRightAction('Move', '#ffab00', 128, progress)}
       {this.renderRightAction('Archive', '#dd2c00', 64, progress)}
     </View>
-  )
+  );
   updateRef = ref => {
     this._swipeableRow = ref;
-  }
+  };
   close = () => {
     this._swipeableRow.close();
-  }
+  };
   render() {
     const { children } = this.props;
     return (

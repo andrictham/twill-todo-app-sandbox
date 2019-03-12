@@ -1,0 +1,35 @@
+export default {
+  '1column': {
+    id: '1column',
+    listID: '1',
+    name: 'To Buy',
+    icon: '',
+    items: ['1item', '2item', '3item'],
+  },
+  '2column': {
+    id: '2column',
+    listID: '1',
+    name: 'Run Out',
+    icon: '',
+    items: ['4item', '5item', '6item', '7item', '8item', '9item'],
+  },
+  '3column': {
+    id: '3column',
+    listID: '1',
+    name: 'Bought',
+    icon: '',
+    items: [
+      '10item',
+      '11item',
+      '12item',
+      '13item',
+      '14item',
+      '15item',
+      '16item',
+      '17item',
+      '18item',
+      '19item',
+      '20item',
+    ],
+  },
+};

@@ -1,8 +1,8 @@
 export default {
-  '1': {
-    id: '1',
+  '1list': {
+    id: '1list',
     name: 'Shopping List',
     icon: '',
-    displayRank: '1',
+    listColumns: ['1column', '2column', '3column'],
   },
 };
